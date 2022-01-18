@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { View, Text } from 'react-native';
 import { requestSignOut } from '../../actions/auth';
 import { DefaultButton, TextButton } from '../../components';
@@ -11,8 +10,7 @@ const ProfileScreen = () => {
   const { user } = useSelector(state => state.auth);
 
   const signOut = () => {
-    // const { id: userId } = this.props;
-    // dispatch(requestSignOut({ userId }));
+    dispatch(requestSignOut());
   };
 
   return (

@@ -1,4 +1,5 @@
 import * as actions from '../actions/auth';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const initialState = {
   user: {
@@ -13,8 +14,8 @@ const initialState = {
   signedIn: false,
   ongoingRequest: {
     signIn: false,
+    signOut: false,
   },
-  navigateTo: null,
 };
 
 const setHeaders = action => ({
@@ -59,12 +60,31 @@ const reducer = (state = initialState, action) => {
         ...state,
         ongoingRequest: { ...state.ongoingRequest, signUp: false },
       };
+    case actions.SIGN_OUT_REQUEST:
+      return {
+        ...state,
+        ongoingRequest: { ...state.ongoingRequest, signOut: true },
+      };
+    case actions.SIGN_OUT_SUCCESS:
+      return {
+        ...initialState,
+        ongoingRequest: { ...state.ongoingRequest, signOut: false },
+      };
+    case actions.SIGN_OUT_FAILURE:
+      return {
+        ...state,
+        ongoingRequest: { ...state.ongoingRequest, signOut: false },
+      };
     case actions.RESTORE_AUTH_INFO:
       return {
         ...state,
         headers: action.auth,
         signedIn: true,
       };
+    case actions.CLEAR_AUTH_INFO:
+      AsyncStorage.removeItem('jwt');
+      
+      return initialState;
     default:
       return state;
   }

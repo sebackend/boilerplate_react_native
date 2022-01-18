@@ -58,39 +58,8 @@ function* signUp(action) {
   );
 }
 
-// // SIGN OUT
-// const signOutRequest = () => API.delete('/auth/sign_out');
-// function* signOutSuccessCallback(result) {
-//   if (result.success) {
-//     yield call(AsyncStorage.removeItem, 'access-token');
-//     yield call(AsyncStorage.removeItem, 'client');
-//     yield call(AsyncStorage.removeItem, 'expiry');
-//     yield call(AsyncStorage.removeItem, 'token-type');
-//     yield call(AsyncStorage.removeItem, 'uid');
-//     yield put({ type: SIGN_OUT_SUCCESS });
-//     yield put({
-//       type: SET_NOTICE,
-//       message: 'SesiÃ³n cerrada corectamente',
-//       kind: 'success',
-//       title: 'Ã‰xito',
-//     });
-//   } else {
-//     throw new Error(result.errors.join('\n'));
-//   }
-// }
-// function* signOutFailureCallback() {
-//   yield put({ type: SIGN_OUT_FAILURE });
-// }
-// function* signOut() {
-//   yield runDefaultSaga({ request: signOutRequest }, signOutSuccessCallback, signOutFailureCallback);
-// }
-
 const validateTokenRequest = () => API.get('/me');
 function* validateTokensSuccessCallback(result, response) {
-  
-  console.log('validateTokensSuccessCallback')
-  console.log(result)
-  
   if (result.logged_in) {
     yield put({
       type: actions.VALIDATE_TOKEN_SUCCESS,
@@ -113,11 +82,27 @@ export function* validateToken() {
   );
 }
 
+// SIGN OUT
+const signOutRequest = () => API.delete('/logout');
+function* signOutSuccessCallback(result) {  
+  if (result.success) {
+    yield call(AsyncStorage.removeItem, 'jwt');
+    yield put({ type: actions.SIGN_OUT_SUCCESS });
+  } else {
+    throw new Error(result.errors.join('\n'));
+  }
+}
+function* signOutFailureCallback() {
+  yield put({ type: actions.SIGN_OUT_FAILURE });
+}
+function* signOut() {
+  yield runDefaultSaga({ request: signOutRequest }, signOutSuccessCallback, signOutFailureCallback);
+}
 
 // DEFINE authSagas
 export default function* authSagas() {
   yield takeEvery(actions.SIGN_IN_REQUEST, signIn);
   yield takeEvery(actions.SIGN_UP_REQUEST, signUp);
   yield takeEvery(actions.VALIDATE_TOKEN_REQUEST, validateToken);
-  //yield takeEvery(actions.SIGN_OUT_REQUEST, signOut);
+  yield takeEvery(actions.SIGN_OUT_REQUEST, signOut);
 }
