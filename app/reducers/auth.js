@@ -22,11 +22,7 @@ const initialState = {
 };
 
 const setHeaders = action => ({
-  accessToken: action.response.headers.get('access-token'),
-  client: action.response.headers.get('client'),
-  expiry: action.response.headers.get('expiry'),
-  tokenType: action.response.headers.get('token-type'),
-  uid: action.response.headers.get('uid'),
+  accessToken: action.response.headers.get('access-token')
 });
 
 const reducer = (state = initialState, action) => {
@@ -48,6 +44,23 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         ongoingRequest: { ...state.ongoingRequest, signIn: false },
+      };
+    case actions.SIGN_UP_REQUEST:
+      return {
+        ...state,
+        ongoingRequest: { ...state.ongoingRequest, signUp: true },
+      };
+    case actions.SIGN_UP_SUCCESS:
+      return {
+        ...state,
+        user: action.result,
+        headers: setHeaders(action),
+        ongoingRequest: { ...state.ongoingRequest, signUp: false },
+      };
+    case actions.SIGN_UP_FAILURE:
+      return {
+        ...state,
+        ongoingRequest: { ...state.ongoingRequest, signUp: false },
       };
     default:
       return state;

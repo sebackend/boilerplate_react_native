@@ -1,5 +1,5 @@
 const API_CONFIG = {
-  url: 'http://192.168.1.150:3000/api/',
+  url: 'http://boilerplate-rails-api-6.herokuapp.com/api/',
   version: 'v1',
   timeout: 15 * 1000,
 };

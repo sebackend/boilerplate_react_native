@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   KeyboardAvoidingView,
   TouchableWithoutFeedback,
@@ -12,6 +12,7 @@ import {
   Alert,
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Feather';
 import { DefaultButton, TextButton, Input, MainLogo } from '../../components';
 import { requestSignIn } from '../../actions/auth';
@@ -20,34 +21,15 @@ import styles from './styles';
 
 const LoginScreen = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const [recoverEmail, setRecoverEmail] = useState('')
   const {
-    signedIn,
     ongoingRequest: {
       signIn
-    },
-    headers: {
-      accessToken
-    } } = useSelector(state => state.auth);
-
-  useEffect(() => {
-  }, []);
-
-  // useEffect(() => {
-  // }, [signedIn]);
-
-  // componentWillReceiveProps(nextProps) {
-  //   const { alertWithType, signedIn, navigation, headers } = this.props;
-
-  //   if (headers.accessToken !== nextProps.headers.accessToken) { // TODO: signedIn !== nextProps.signedIn && nextProps.signedIn
-  //     setTimeout(() => {
-  //       navigation.navigate('App');
-  //     }, 100);
-  //   }
-  // }
+  }} = useSelector(state => state.auth);
 
   const toggleModalVisible = (visible) => {
     setModalVisible(visible);
@@ -55,9 +37,9 @@ const LoginScreen = () => {
 
   const signInAsync = async (email, password) => {
     dispatch(requestSignIn({
-      "user": {
-        "email": email,
-        "password": password
+      user: {
+        email,
+        password
       }
     }));
   };
@@ -79,7 +61,7 @@ const LoginScreen = () => {
         <TouchableWithoutFeedback accessible={false} onPress={Keyboard.dismiss}>
           <View style={styles.loginContainer}>
             <View style={styles.titleContainer}>
-              <MainLogo extraStyle={{ width: 200, height: 144, marginBottom: 20 }} />
+              <MainLogo extraStyle={{ width: 100, height: 100, marginBottom: 20 }} />
               <Text style={styles.titleText}>Bienvenido</Text>
             </View>
             <View style={styles.container}>
@@ -169,7 +151,7 @@ const LoginScreen = () => {
                   <DefaultButton
                     title="Registrarse"
                     containerStyles={styles.registerButton}
-                    onPress={() => props.navigation.navigate('Register')}
+                    onPress={() => navigation.navigate('Register')}
                     textStyles={{fontSize: 18}}
                   />
                 </View>
@@ -181,16 +163,5 @@ const LoginScreen = () => {
     </KeyboardAvoidingView>
   );
 }
-
-// const mapStateToProps = (state) => {
-//   const { notice } = state;
-//   const { headers, ongoingRequest, signedIn } = state.auth;
-//   return {
-//     notice,
-//     headers,
-//     ongoingRequest,
-//     signedIn,
-//   };
-// };
 
 export default LoginScreen;

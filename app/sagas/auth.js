@@ -8,27 +8,23 @@ import runDefaultSaga from './default';
 // SIGN IN
 const signInRequest = params => API.post('/login', params);
 function* signInSuccessCallback(result, response) {
-  console.log('::: signInSuccessCallback :::')
-  console.log(result)
-  console.log(response)
-  console.log(response.headers)
-
   if (result.errors) {
     throw new Error(result.errors.join('\n'));
   } else {
-    // yield call(AsyncStorage.setItem, 'access-token', response.headers.get('access-token'));
-    // yield call(AsyncStorage.setItem, 'client', response.headers.get('client'));
-    // yield call(AsyncStorage.setItem, 'expiry', response.headers.get('expiry'));
-    // yield call(AsyncStorage.setItem, 'token-type', response.headers.get('token-type'));
-    // yield call(AsyncStorage.setItem, 'uid', response.headers.get('uid'));
+    
+    const accessToken = response.headers.get('Authorization').split('Bearer ')[1];
+    
+    yield call(AsyncStorage.setItem, 'access-token', accessToken);
     yield put({ type: actions.SIGN_IN_SUCCESS, result, response });
   }
 }
+
 function* signInFailureCallback() {
   yield put({
     type: actions.SIGN_IN_FAILURE,
   });
 }
+
 function* signIn(action) {
   yield runDefaultSaga(
     { request: signInRequest, params: action.params },
@@ -37,38 +33,30 @@ function* signIn(action) {
   );
 }
 
-// // SIGN UP
-// const signUpRequest = params => API.post('/auth', params);
-// function* signUpSuccessCallback(result, response) {
-//   if (result.errors) {
-//     throw new Error(result.errors.join('\n'));
-//   } else {
-//     yield call(AsyncStorage.setItem, 'access-token', response.headers.get('access-token'));
-//     yield call(AsyncStorage.setItem, 'client', response.headers.get('client'));
-//     yield call(AsyncStorage.setItem, 'expiry', response.headers.get('expiry'));
-//     yield call(AsyncStorage.setItem, 'token-type', response.headers.get('token-type'));
-//     yield call(AsyncStorage.setItem, 'uid', response.headers.get('uid'));
-//     yield put({ type: SIGN_UP_SUCCESS, result, response });
-//     yield put({
-//       type: SET_NOTICE,
-//       message: 'Usuario registrado corectamente',
-//       kind: 'success',
-//       title: 'Ã‰xito',
-//     });
-//   }
-// }
-// function* signUpFailureCallback() {
-//   yield put({
-//     type: SIGN_UP_FAILURE,
-//   });
-// }
-// function* signUp(action) {
-//   yield runDefaultSaga(
-//     { request: signUpRequest, params: action.params },
-//     signUpSuccessCallback,
-//     signUpFailureCallback,
-//   );
-// }
+// SIGN UP
+const signUpRequest = params => API.post('/signup', params);
+function* signUpSuccessCallback(result, response) {
+  if (result.errors) {
+    throw new Error(result.errors.join('\n'));
+  } else {
+    
+    const accessToken = response.headers.get('Authorization').split('Bearer ')[1];
+    yield call(AsyncStorage.setItem, 'access-token', accessToken);
+    yield put({ type: actions.SIGN_UP_SUCCESS, result, response });
+  }
+}
+function* signUpFailureCallback() {
+  yield put({
+    type: actions.SIGN_UP_FAILURE,
+  });
+}
+function* signUp(action) {
+  yield runDefaultSaga(
+    { request: signUpRequest, params: action.params },
+    signUpSuccessCallback,
+    signUpFailureCallback,
+  );
+}
 
 // // SIGN OUT
 // const signOutRequest = () => API.delete('/auth/sign_out');
@@ -168,7 +156,7 @@ function* signIn(action) {
 // DEFINE authSagas
 export default function* authSagas() {
   yield takeEvery(actions.SIGN_IN_REQUEST, signIn);
-  // yield takeEvery(SIGN_UP_REQUEST, signUp);
+  yield takeEvery(actions.SIGN_UP_REQUEST, signUp);
   // yield takeEvery(SIGN_OUT_REQUEST, signOut);
   // yield takeEvery(VALIDATE_TOKEN_REQUEST, validateToken);
   // yield takeEvery(PASSWORD_RECOVERY_REQUEST, recoverPassword);

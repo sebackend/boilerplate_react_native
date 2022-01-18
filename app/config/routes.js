@@ -49,6 +49,7 @@ const AuthStackScreen = () => (
     }}
   >
     <AuthStack.Screen name="Login" component={screens.LoginScreen} />
+    <AuthStack.Screen name="Register" component={screens.RegisterScreen} />
   </AuthStack.Navigator>
 );
 
