@@ -15,7 +15,8 @@ import {
       if (timeout) {
         throw new Error(API.getTimeoutMessage());
       }
-  
+      console.log('response')
+      console.log(response)
       if (response.ok) {
         const result = yield response.json();
         yield successCallback(result, response);
@@ -24,6 +25,8 @@ import {
         throw message.errors || message.message || 'Inténtelo más tarde.';
       }
     } catch (err) {
+      console.log('err')
+      console.log(err)
       yield failureCallback(err);
       // yield put({
       //   type: SET_NOTICE,

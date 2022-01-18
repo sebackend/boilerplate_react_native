@@ -22,7 +22,7 @@ const initialState = {
 };
 
 const setHeaders = action => ({
-  accessToken: action.response.headers.get('access-token')
+  accessToken: action.response.headers.get('Authorization').split('Bearer ')[1]
 });
 
 const reducer = (state = initialState, action) => {
@@ -55,6 +55,7 @@ const reducer = (state = initialState, action) => {
         ...state,
         user: action.result,
         headers: setHeaders(action),
+        signedIn: true,
         ongoingRequest: { ...state.ongoingRequest, signUp: false },
       };
     case actions.SIGN_UP_FAILURE:

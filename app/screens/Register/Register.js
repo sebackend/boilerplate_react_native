@@ -39,19 +39,16 @@ const RegisterScreen = () => {
   };
 
   const validateMail = (text) => {
+    
     if (email.length === 0) { return false; }
     const reg = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
-    if (reg.test(text) === false) {
-      setEmail(text);
-      return false;
-    }
     
     setEmail(text);
-    return true;
+    return !reg.test(text);
   };
 
   const validatePassword = () => {
-    return password === confirmPassword;
+    return password !== confirmPassword;
   };
 
   const signUpAsync = () => {
@@ -63,19 +60,15 @@ const RegisterScreen = () => {
     if (wrongFirstName || wrongLastName || wrongMail || wrongPassword) {
         
     } else {
-      console.log('wrongFirstName -> ', wrongFirstName)
-      console.log('wrongLastName -> ', wrongLastName)
-      console.log('wrongMail -> ', wrongMail)
-      console.log('wrongPassword -> ', wrongPassword)
-      // dispatch(requestSignUp({
-      //   user: {
-      //     email,
-      //     password,
-      //     password_confirmation: confirmPassword,
-      //     first_name: firstName,
-      //     lastname: lastName,
-      //   }})
-      // );
+      dispatch(requestSignUp({
+        user: {
+          email,
+          password,
+          password_confirmation: confirmPassword,
+          first_name: firstName,
+          last_name: lastName,
+        }})
+      );
     }
   };
 
