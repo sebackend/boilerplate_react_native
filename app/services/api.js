@@ -24,9 +24,7 @@ export default class API {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'access-token': store.getState().auth.headers.accessToken,
-        client: store.getState().auth.headers.client,
-        uid: store.getState().auth.headers.uid,
+        'Authorization': `Bearer ${store.getState().auth.headers.jwt}`
       },
     });
   }
@@ -39,9 +37,7 @@ export default class API {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'access-token': store.getState().auth.headers.accessToken,
-        client: store.getState().auth.headers.client,
-        uid: store.getState().auth.headers.uid,
+        'Authorization': `Bearer ${store.getState().auth.headers.jwt}`
       },
       body: JSON.stringify(params),
     });
@@ -55,9 +51,7 @@ export default class API {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'access-token': store.getState().auth.headers.accessToken,
-        client: store.getState().auth.headers.client,
-        uid: store.getState().auth.headers.uid,
+        'Authorization': `Bearer ${store.getState().auth.headers.jwt}`
       },
       body: JSON.stringify(params),
     });
@@ -69,9 +63,7 @@ export default class API {
       headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
-        'access-token': store.getState().auth.headers.accessToken,
-        client: store.getState().auth.headers.client,
-        uid: store.getState().auth.headers.uid,
+        'Authorization': `Bearer ${store.getState().auth.headers.jwt}`
       },
     });
   }

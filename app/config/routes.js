@@ -12,6 +12,7 @@ import {
 } from './navigatorOptions';
 
 import * as screens from '../screens';
+import { restoreAuthInfo, validateToken } from '../actions/auth';
 
 const HomeStack = createNativeStackNavigator();
 const HomeStackScreen = () => {
@@ -26,6 +27,17 @@ const HomeStackScreen = () => {
   )
 };
 
+const ProfileStack = createNativeStackNavigator();
+const ProfileStackScreen = () => (
+  <ProfileStack.Navigator>
+    <ProfileStack.Screen
+      name="Profile"
+      options={{ title: 'Perfil' }}
+      component={screens.ProfileScreen}
+    />
+  </ProfileStack.Navigator>
+);
+
 const AppStack = createBottomTabNavigator();
 const AppStackScreen = () => (
   <AppStack.Navigator
@@ -36,6 +48,11 @@ const AppStackScreen = () => (
       name="HomeTab"
       component={HomeStackScreen}
       options={appTabNavigatorOptions.home}
+    />
+    <AppStack.Screen
+      name="ProfileTab"
+      component={ProfileStackScreen}
+      options={appTabNavigatorOptions.profile}
     />
   </AppStack.Navigator>
 );
@@ -54,9 +71,11 @@ const AuthStackScreen = () => (
 );
 
 const bootstrapAsync = async (dispatch) => {
-  const accessToken = await AsyncStorage.getItem('access-token');
-  if (accessToken) {
-    dispatch(restoreAuthInfo({ accessToken })); // Sólo setear el accessToken que guardamos en el AsyncStorage en el auth store
+  const jwt = await AsyncStorage.getItem('jwt');
+
+  if (jwt) {
+    // Setear el jwt que guardamos en el AsyncStorage, hacia el auth store
+    dispatch(restoreAuthInfo({ jwt }));
   }
 }
 
@@ -64,10 +83,9 @@ const RootStack = createNativeStackNavigator();
 const RootStackScreen = () => {
   const dispatch = useDispatch();
   const {
-    user,
     signedIn,
     headers: {
-      accessToken
+      jwt
     }
   } = useSelector(state => state.auth);
 
@@ -75,17 +93,12 @@ const RootStackScreen = () => {
     bootstrapAsync(dispatch);
   }, []);
 
-  // useEffect(() => {
-  //   if (accessToken !== '') {
-  //     dispatch(validateToken()); // Validar accesToken contra la API para ver que aún no ha expirado
-  //   }
-  // }, [accessToken]);
-
-  // useEffect(() => {
-  //   if (user.id !== 0) {
-  //     dispatch(getUserPreferences({ userId: user.id }));
-  //   }
-  // }, [user]);
+  useEffect(() => {
+    if (jwt !== '') {
+      // Validar accesToken contra la API para ver que aún no ha expirado
+      dispatch(validateToken());
+    }
+  }, [jwt]);
 
   return (
     <RootStack.Navigator

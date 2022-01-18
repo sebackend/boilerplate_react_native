@@ -52,6 +52,11 @@ const appTabNavigatorOptions = {
       'home',
     ),
     tabBarLabel: 'Inicio',
+  },
+  profile: {
+    tabBarLabel: 'Mi Cuenta',
+    tabBarIcon: ({ focused, color }) =>
+      TabBarIconWrapper({ focused, tintColor: color }, 'user', 'user'),
   }
 };
 

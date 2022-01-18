@@ -12,9 +12,9 @@ function* signInSuccessCallback(result, response) {
     throw new Error(result.errors.join('\n'));
   } else {
     
-    const accessToken = response.headers.get('Authorization').split('Bearer ')[1];
+    const jwt = response.headers.get('Authorization').split('Bearer ')[1];
     
-    yield call(AsyncStorage.setItem, 'access-token', accessToken);
+    yield call(AsyncStorage.setItem, 'jwt', jwt);
     yield put({ type: actions.SIGN_IN_SUCCESS, result, response });
   }
 }
@@ -40,8 +40,8 @@ function* signUpSuccessCallback(result, response) {
     throw new Error(result.errors.join('\n'));
   } else {
     
-    const accessToken = response.headers.get('Authorization').split('Bearer ')[1];
-    yield call(AsyncStorage.setItem, 'access-token', accessToken);
+    const jwt = response.headers.get('Authorization').split('Bearer ')[1];
+    yield call(AsyncStorage.setItem, 'jwt', jwt);
     yield put({ type: actions.SIGN_UP_SUCCESS, result, response });
   }
 }
@@ -85,80 +85,39 @@ function* signUp(action) {
 //   yield runDefaultSaga({ request: signOutRequest }, signOutSuccessCallback, signOutFailureCallback);
 // }
 
-// // VALIDATE TOKENS
-// const validateTokenRequest = () => API.get('/auth/validate_token');
-// function* validateTokensSuccessCallback(result, response) {
-//   // if (result.ok) {
-//   yield put({
-//     type: VALIDATE_TOKEN_SUCCESS,
-//     result,
-//     response,
-//     navigateTo: 'App',
-//   });
-//   // } else {
-//   //   throw new Error(response.errors.join('\n'));
-//   // }
-// }
-// function* validateTokensFailureCallback() {
-//   yield put({ type: CLEAR_AUTH_INFO, navigateTo: 'Auth' });
-// }
-// function* validateToken() {
-//   yield runDefaultSaga(
-//     { request: validateTokenRequest },
-//     validateTokensSuccessCallback,
-//     validateTokensFailureCallback,
-//   );
-// }
+const validateTokenRequest = () => API.get('/me');
+function* validateTokensSuccessCallback(result, response) {
+  
+  console.log('validateTokensSuccessCallback')
+  console.log(result)
+  
+  if (result.logged_in) {
+    yield put({
+      type: actions.VALIDATE_TOKEN_SUCCESS,
+      result,
+      response,
+      user: result.user_info.data.attributes
+    });
+  } else {
+    yield put({ type: actions.CLEAR_AUTH_INFO });
+  }
+}
+function* validateTokensFailureCallback() {
+  yield put({ type: actions.CLEAR_AUTH_INFO });
+}
+export function* validateToken() {
+  yield runDefaultSaga(
+    { request: validateTokenRequest },
+    validateTokensSuccessCallback,
+    validateTokensFailureCallback
+  );
+}
 
-// // RECOVER PASSWORD
-// const recoverPasswordRequest = params => API.post('/users/recover_password', params);
-// function* recoverPasswordSuccessCallback(result) {
-//   yield put({ type: PASSWORD_RECOVERY_FINISHED });
-//   if (result.success) {
-//     yield put({
-//       type: SET_NOTICE,
-//       title: 'Ã‰xito',
-//       message: result.message,
-//       kind: 'success',
-//     });
-//   } else {
-//     throw new Error(result.errors.join('\n'));
-//   }
-// }
-// function* recoverPasswordFailureCallback() {
-//   // Error handled by runDefaultSaga
-//   yield null;
-// }
-// function* recoverPassword(action) {
-//   yield runDefaultSaga(
-//     { request: recoverPasswordRequest, params: action.params },
-//     recoverPasswordSuccessCallback,
-//     recoverPasswordFailureCallback,
-//   );
-// }
-
-// const addDeviceRequest = params => API.post(`/devices`, params);
-
-// function* addDeviceSuccessCallback() {
-//   yield put({ type: ADD_DEVICE_SUCCESS });
-// }
-// function* addDeviceFailureCallback() {
-//   yield put({ type: ADD_DEVICE_FAILURE });
-// }
-// function* addDevice(action) {
-//   yield runDefaultSaga(
-//     { request: addDeviceRequest, params: action.params },
-//     addDeviceSuccessCallback,
-//     addDeviceFailureCallback,
-//   );
-// }
 
 // DEFINE authSagas
 export default function* authSagas() {
   yield takeEvery(actions.SIGN_IN_REQUEST, signIn);
   yield takeEvery(actions.SIGN_UP_REQUEST, signUp);
-  // yield takeEvery(SIGN_OUT_REQUEST, signOut);
-  // yield takeEvery(VALIDATE_TOKEN_REQUEST, validateToken);
-  // yield takeEvery(PASSWORD_RECOVERY_REQUEST, recoverPassword);
-  // yield takeEvery(ADD_DEVICE, addDevice);
+  yield takeEvery(actions.VALIDATE_TOKEN_REQUEST, validateToken);
+  //yield takeEvery(actions.SIGN_OUT_REQUEST, signOut);
 }

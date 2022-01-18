@@ -8,11 +8,7 @@ const initialState = {
     role: '',
   },
   headers: {
-    accessToken: '',
-    client: '',
-    expiry: '',
-    tokenType: '',
-    uid: '',
+    jwt: '',
   },
   signedIn: false,
   ongoingRequest: {
@@ -22,7 +18,7 @@ const initialState = {
 };
 
 const setHeaders = action => ({
-  accessToken: action.response.headers.get('Authorization').split('Bearer ')[1]
+  jwt: action.response.headers.get('Authorization').split('Bearer ')[1]
 });
 
 const reducer = (state = initialState, action) => {
@@ -62,6 +58,12 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         ongoingRequest: { ...state.ongoingRequest, signUp: false },
+      };
+    case actions.RESTORE_AUTH_INFO:
+      return {
+        ...state,
+        headers: action.auth,
+        signedIn: true,
       };
     default:
       return state;
