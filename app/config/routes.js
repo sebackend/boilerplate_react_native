@@ -27,6 +27,24 @@ const HomeStackScreen = () => {
   )
 };
 
+const UserStack = createNativeStackNavigator();
+const UserStackScreen = () => {
+  return (
+    <UserStack.Navigator>
+      <UserStack.Screen
+        name="UserIndex"
+        component={screens.UserIndexScreen}
+        options={commonHeaderNavigationOptions}
+      />
+      <UserStack.Screen
+        name="UserShow"
+        component={screens.UserShowScreen}
+        options={commonHeaderNavigationOptions}
+      />
+    </UserStack.Navigator>
+  )
+};
+
 const ProfileStack = createNativeStackNavigator();
 const ProfileStackScreen = () => (
   <ProfileStack.Navigator>
@@ -48,6 +66,11 @@ const AppStackScreen = () => (
       name="HomeTab"
       component={HomeStackScreen}
       options={appTabNavigatorOptions.home}
+    />
+    <AppStack.Screen
+      name="UsersTab"
+      component={UserStackScreen}
+      options={appTabNavigatorOptions.users}
     />
     <AppStack.Screen
       name="ProfileTab"
@@ -112,8 +135,7 @@ const RootStackScreen = () => {
         <RootStack.Screen name="Auth" component={AuthStackScreen} />
       )}
     </RootStack.Navigator>
-  )
-  
+  );
 }
 
 const AppContainer = () => {

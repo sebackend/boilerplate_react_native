@@ -57,6 +57,11 @@ const appTabNavigatorOptions = {
     tabBarLabel: 'Mi Cuenta',
     tabBarIcon: ({ focused, color }) =>
       TabBarIconWrapper({ focused, tintColor: color }, 'user', 'user'),
+  },
+  users: {
+    tabBarLabel: 'Usuarios',
+    tabBarIcon: ({ focused, color }) =>
+      TabBarIconWrapper({ focused, tintColor: color }, 'list', 'list'),
   }
 };
 
