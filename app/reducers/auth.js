@@ -81,6 +81,11 @@ const reducer = (state = initialState, action) => {
         headers: action.auth,
         signedIn: true,
       };
+    case actions.VALIDATE_TOKEN_SUCCESS:
+      return {
+        ...state,
+        user: action.user,
+      };
     case actions.CLEAR_AUTH_INFO:
       AsyncStorage.removeItem('jwt');
       

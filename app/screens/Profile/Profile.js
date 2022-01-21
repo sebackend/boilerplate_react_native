@@ -8,7 +8,7 @@ import styles from './styles';
 const ProfileScreen = () => {
   const dispatch = useDispatch();
   const { user } = useSelector(state => state.auth);
-
+  
   const signOut = () => {
     dispatch(requestSignOut());
   };
@@ -20,11 +20,11 @@ const ProfileScreen = () => {
       </View>
       <View style={styles.detailsView}>
         <Text style={styles.detailsText}>EMAIL</Text>
-        <Text style={styles.detailsText}>{user.email}</Text>
+        <Text style={styles.detailsText}>{user?.email}</Text>
       </View>
       <View style={styles.detailsView}>
         <Text style={styles.detailsText}>NOMBRE</Text>
-        <Text style={styles.detailsText}>{`${user.first_name} ${user.last_name}`}</Text>
+        <Text style={styles.detailsText}>{`${user?.first_name} ${user?.last_name}`}</Text>
       </View>
 
       <View style={styles.buttonsBox}>
