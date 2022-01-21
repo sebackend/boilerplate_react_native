@@ -32,7 +32,7 @@ const UserStackScreen = () => {
   return (
     <UserStack.Navigator>
       <UserStack.Screen
-        name="UserIndex"
+        name="Users"
         component={screens.UserIndexScreen}
         options={commonHeaderNavigationOptions}
       />

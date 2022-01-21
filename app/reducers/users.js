@@ -7,6 +7,7 @@ const initialState = {
   usersList: [],
   ongoingRequest: {
     fetchingUsers: false,
+    fetchingSingleUser: false
   },
 };
 
@@ -27,6 +28,27 @@ const reducer = (state = initialState, action) => {
       return {
         ...state,
         ongoingRequest: { ...state.ongoingRequest, fetchingUsers: false }
+      }
+    case actions.GET_SINGLE_USER_REQUEST:
+      return {
+        ...state,
+        ongoingRequest: { ...state.ongoingRequest, fetchingSingleUser: true }
+      }
+    case actions.GET_SINGLE_USER_SUCCESS:
+      return {
+        ...state,
+        currentUser: action.result.data,
+        ongoingRequest: { ...state.ongoingRequest, fetchingSingleUser: false }
+      }
+    case actions.GET_SINGLE_USER_FAILURE:
+      return {
+        ...state,
+        ongoingRequest: { ...state.ongoingRequest, fetchingSingleUser: false }
+      }
+    case actions.RESET_SHOWED_USER:
+      return {
+        ...state,
+        currentUser: initialState.currentUser,
       }
     default:
       return {

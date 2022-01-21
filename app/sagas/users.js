@@ -30,6 +30,33 @@ function* getUsers(action) {
   );
 }
 
-export default function* usersSagas() {
+const getSingleUserRequest = params => API.get(`/users/${params.userId}`);
+
+function* getSingleUserSuccessCallback(result, response) {
+  if (result.errors) {
+    throw new Error(response.errors.join('\n'));
+  } else {
+    yield put({
+      type: actions.GET_SINGLE_USER_SUCCESS,
+      result,
+      response,
+    });
+  }
+}
+
+function* getSingleUserFailureCallback() {
+  yield put({ type: actions.GET_SINGLE_USER_FAILURE });
+}
+
+function* getSingleUser(action) {
+  yield runDefaultSaga(
+    { request: getSingleUserRequest, params: action.params },
+    getSingleUserSuccessCallback,
+    getSingleUserFailureCallback
+  );
+}
+
+export default function* userSagas() {
   yield takeEvery(actions.GET_USERS_REQUEST, getUsers);
+  yield takeEvery(actions.GET_SINGLE_USER_REQUEST, getSingleUser);
 }

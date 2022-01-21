@@ -88,9 +88,6 @@ const RegisterScreen = () => {
               </View>
               <View style={styles.container}>
                 <Input
-                  // reference={(component) => {
-                  //   this.firstNameInput = component;
-                  // }}
                   value={firstName}
                   onChangeText={firstName => setFirstName(firstName)}
                   //onSubmitEditing={() => this.lastNameInput.focus()}

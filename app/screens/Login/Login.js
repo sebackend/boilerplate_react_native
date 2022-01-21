@@ -46,9 +46,6 @@ const LoginScreen = () => {
 
   const handlePasswordRecovery = () => {
     Alert.alert('ESTO ENVIA UN CORREO A', recoverEmail)
-    // const { dispatch } = this.props;
-    // dispatch(requestPasswordRecovery({ email }));
-    // this.setModalVisible(false);
   }
 
   return (

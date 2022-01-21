@@ -5,10 +5,6 @@ import { Provider } from 'react-redux';
 import store from './config/store';
 import AppContainer from './config/routes';
 
-
-// import AppContainer from './config/routes';
-// import { AlertProvider } from './components';
-
 export default () => {    
   return (
     <Provider store={store}>
